@@ -23,9 +23,15 @@ export const sockethandler = (io) => {
       });
 
       const roomid = [senderid, receiverid].sort().join("_");
-      console.log(roomid)
       io.to(roomid).emit("newmsg", savedmessage);
     });
+
+    socket.on("typing",({senderid,receiverid})=>{
+      io.to(receiverid).emit("usertyping",senderid)
+    })
+    socket.on("stoptyping",({receiverid})=>{
+      io.to(receiverid).emit("userstoptyping")
+    })
     socket.on("disconnect", () => {
       console.log("Socket Disconnected");
     });
